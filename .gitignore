@@ -1,0 +1,13 @@
+build/
+model/
+*.pyd
+*.pt
+*.h5
+*.zip
+*.mp4
+*.mov
+*.csv
+venv/
+venv_old/
+output/
+__pycache__/
