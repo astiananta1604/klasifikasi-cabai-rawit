@@ -1,5 +1,5 @@
 build/
-model/
+
 *.pyd
 *.pt
 *.h5
