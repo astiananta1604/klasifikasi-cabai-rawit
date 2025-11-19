@@ -1,0 +1,273 @@
+<!DOCTYPE html> 
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistem Klasifikasi Cabai Rawit</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f9;
+            color: #333;
+        }
+
+        .container {
+            width: 75%;
+            margin: auto;
+            padding: 40px 0;
+        }
+
+        h1 {
+            font-size: 38px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        h1 span {
+            font-size: 45px;
+        }
+
+        /* ========================== */
+        /*      SPASI DIPERBAIKI     */
+        /* ========================== */
+
+        h2 {
+            font-size: 28px;
+            margin-top: 18px;      /* lebih rapat */
+            margin-bottom: 6px;    /* lebih dekat dengan konten */
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        hr {
+            margin: 20px 0;        /* lebih rapat */
+            border: none;
+            border-top: 1px solid #ccc;
+        }
+
+        .section {
+            margin-top: 8px;       /* sebelum 12px → diperkecil */
+            padding: 13px 18px;    /* kotak lebih ringkas */
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.08);
+        }
+
+        ul, ol {
+            margin-top: 4px;
+            margin-bottom: 6px;
+            padding-left: 22px;
+        }
+
+        ul li, 
+        ol li {
+            margin-bottom: 3px;   /* sebelumnya 4px → lebih rapat */
+        }
+
+        p {
+            margin-bottom: 8px;
+        }
+
+        /* ===================================== */
+        /*      BAGIAN UPLOAD DIPERKECIL         */
+        /* ===================================== */
+
+        .upload-area {
+            margin-top: 15px;
+            padding: 12px;
+            background: #eef0f5;
+            border: 2px dashed #c4c7d1;
+            text-align: center;
+            border-radius: 12px;
+            transition: 0.3s;
+
+            width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .upload-area:hover {
+            background: #e5e8ef;
+            border-color: #9ca3af;
+        }
+
+        .upload-box {
+            border: 2px dashed #c8ccd0;
+            background: #f3f4f6;
+            padding: 10px;
+            border-radius: 10px;
+
+            width: 270px;
+            height: 65px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+
+            margin: auto;
+        }
+
+        .upload-icon { 
+            font-size: 24px;
+            opacity: 0.6; 
+        }
+
+        .upload-text strong { font-size: 14px; }
+
+        .upload-text span {
+            font-size: 11px;
+            color: #555;
+        }
+
+        .preview img {
+            max-width: 350px;
+            margin-top: 15px;
+            border-radius: 10px;
+        }
+
+        .hasil-box {
+            margin-top: 20px;
+            padding: 18px;
+            background: #dff7df;
+            border-left: 6px solid #3ca53c;
+            border-radius: 10px;
+        }
+
+        .error-box {
+            margin-top: 20px;
+            padding: 18px;
+            background: #ffdede;
+            border-left: 6px solid #ff3b3b;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1><span>🌶️</span> Sistem Klasifikasi Tingkat Kematangan Cabai Rawit</h1>
+    <p>
+        Website ini dibuat untuk <i>mengklasifikasikan tingkat kematangan cabai rawit</i>
+        (mentah, setengah matang, matang) menggunakan algoritma
+        <i>K-Nearest Neighbors (KNN)</i>.
+    </p>
+
+    <hr>
+
+    <h2>Tujuan</h2>
+    <div class="section">
+        <ul>
+            <li>Membantu petani atau pengguna dalam <i>menentukan tingkat kematangan cabai rawit</i>.</li>
+            <li>Memberikan contoh penerapan <i>machine learning berbasis citra</i> dalam bidang pertanian.</li>
+            <li>Menyediakan sistem yang sederhana dan mudah digunakan melalui website.</li>
+        </ul>
+    </div>
+
+    <h2>Cara Kerja Aplikasi</h2>
+    <div class="section">
+        <ol>
+            <li>Upload gambar cabai rawit melalui menu <i>Upload & Klasifikasi</i>.</li>
+            <li>Sistem melakukan <i>preprocessing (crop,resize,ekstraksi warna Hue Saturation Value (HSV)</i>).</li>
+            <li>Fitur HSV dinormalisasi dengan scaler.</li>
+            <li>Algoritma <i>K-Nearest Neighbor</i> (KNN) digunakan untuk klasifikasi.</li>
+            <li>Hasil klasifikasi ditampilkan apakah cabai Mentah,Setengah Matang, atau Matang.</li>
+        </ol>
+    </div>
+
+    <h2>Unggah & Klasifikasi Cabai Rawit</h2>
+    <p>Silakan unggah gambar cabai rawit yang ingin diklasifikasikan.
+        kamu dapat menarik dan melepaskan gambar ke kotak dibawah
+        atau klik area tersebut untuk memilih gambar dari perangkatmu
+    </p> 
+    <p>Pastikan gambar tidak terlalu terang dan tidak terlalu gelap</p>
+    <form id="uploadForm" action="/" method="POST" enctype="multipart/form-data">
+
+        <div class="upload-area"
+             onclick="document.getElementById('image').click()"
+             ondragover="event.preventDefault()"
+             ondrop="handleDrop(event)">
+
+            <label class="upload-box">
+                <div class="upload-icon">☁️</div>
+                <div class="upload-text">
+                    <strong>Drag & drop atau klik di sini</strong><br>
+                    <span>Maks 200MB • JPG, PNG, JPEG</span>
+                </div>
+            </label>
+
+            <input type="file" id="image" name="file" accept="image/*" hidden
+                   onchange="document.getElementById('uploadForm').submit();">
+
+            <p id="status" style="margin-top:10px; font-size:14px; color:#555;"></p>
+        </div>
+
+    </form>
+
+    <script>
+        function handleDrop(e) {
+            e.preventDefault();
+            document.getElementById("image").files = e.dataTransfer.files;
+            document.getElementById("uploadForm").submit();
+        }
+    </script>
+
+    {% if original %}
+    <div class="section preview">
+        <h3>📸 Gambar Asli</h3>
+        <img src="data:image/png;base64,{{ original }}">
+    </div>
+    {% endif %}
+
+    {% if hasil %}
+        {% if hasil.error %}
+            <div class="error-box">{{ hasil.error }}</div>
+        {% else %}
+            <div class="hasil-box">
+                <h3>📌 Hasil Klasifikasi: <b>{{ hasil.upper() }}</b></h3>
+
+                {% set label_lc = hasil.lower() %}
+
+                {% if label_lc == "matang" %}
+                    <p>✅ <b>Layak Panen</b> – cabai berwarna merah tua atau oranye pekat.</p>
+
+                {% elif label_lc == "setengah_matang" %}
+                    <p>✅ <b>Layak Panen</b> – cabai mulai menunjukkan warna merah atau oranye.</p>
+
+                {% elif label_lc == "mentah" %}
+                    <p>❌ <b>Belum Bisa Dipanen</b> – cabai masih berwarna hijau.</p>
+
+                {% else %}
+                    <p>⚠️ <b>Invalid</b> – objek pada gambar tidak dikenali sebagai cabai.</p>
+                {% endif %}
+            </div>
+
+            <div class="section">
+                <h3>Nilai <i>Hue,Saturation,Value</i>(HSV)</h3>
+                <ul>
+                    <li>Hue: {{ h }}</li>
+                    <li>Saturation: {{ s }}</li>
+                    <li>Value: {{ v }}</li>
+                </ul>
+            </div>
+
+            {% if cropped %}
+            <div class="section preview">
+                <h3>✂️ Gambar Hasil Crop</h3>
+                <img src="data:image/png;base64,{{ cropped }}">
+            </div>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+</div>
+</body>
+</html>
